@@ -1,11 +1,9 @@
 // ==UserScript==
 // @name         Steam-AutoCraft
-// @namespace    http://10101000.redirectme.net/
 // @version      1.1
 // @description  AutoCraft Badges inside Steam
 // @author       10101000 aka Ryan Steed
 // @match        *://steamcommunity.com/*/gamecards/*
-// @require      https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js
 // @copyright    2015 10101000 (Ryan Steed)
 // @grant        none
 // ==/UserScript==
@@ -21,9 +19,7 @@ jQuery(document).ready(function(){
         checkBadge();
     }
 
-    if (craftBadgeState == 1){
-        addButton();
-    }
+    addButton();
     
     if (window.sessionStorage.autoCraftState){
         autoCraft();
@@ -32,8 +28,12 @@ jQuery(document).ready(function(){
 
 function addButton(){
     if (invLinks){
-        invLinks.append('<a><button type="button" class="btn_grey_grey btn_small_thin" id="autocraft"><span>AutoCraft remaining badges</span></button></a>');
-        jQuery('#autocraft').click(function(){ autoCraft(); });
+        if (craftBadgeState == 1){
+            invLinks.append('<a><button type="button" class="btn_grey_grey btn_small_thin" id="autocraft"><span>AutoCraft remaining badges</span></button></a>');
+            jQuery('#autocraft').click(function(){ autoCraft(); });
+        } else {
+            invLinks.append('<a><button type="button" class="btn_disabled btn_grey_grey btn_small_thin" style="color:red;" id="autocraft" disabled><span>AutoCraft remaining badges</span></button>');
+        }
     }
 }
 
@@ -46,7 +46,9 @@ function checkBadge(){
 }
     
 function craftBadge(){
-    jQuery('.badge_craft_button').click();
+    //jQuery('.badge_craft_button').click();
+    setTimeout(function(){ window.location.reload(true); }, 2000);
+    //alert("NOT CRAFTING BADGE!");
 }
                       
 function autoCraft(){
