@@ -32,7 +32,7 @@ function addButton(){
             invLinks.append('<a><button type="button" class="btn_grey_grey btn_small_thin" id="autocraft"><span>AutoCraft remaining badges</span></button></a>');
             jQuery('#autocraft').click(function(){ autoCraft(); });
         } else {
-            invLinks.append('<a><button type="button" class="btn_disabled btn_grey_grey btn_small_thin" style="color:red;" id="autocraft" disabled><span>AutoCraft remaining badges</span></button>');
+            invLinks.append('<a><button type="button" class="btn_disabled btn_grey_grey btn_small_thin" id="autocraft" disabled><span>AutoCraft remaining badges</span></button>');
         }
     }
 }
