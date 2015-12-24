@@ -46,9 +46,8 @@ function checkBadge(){
 }
     
 function craftBadge(){
-    //jQuery('.badge_craft_button').click();
+    jQuery('.badge_craft_button').click();
     setTimeout(function(){ window.location.reload(true); }, 2000);
-    //alert("NOT CRAFTING BADGE!");
 }
                       
 function autoCraft(){
