@@ -15,6 +15,7 @@ Once installed, Steam-AutoCraft adds a new button labeled *"AutoCraft remaining 
 * Fri, Jul 10, 2015  3:11:53 PM - Re-commit of 1.1 release.
 * Tue, Dec 29, 2015  1:58:01 PM - Small update to always show button but in disabled state if no badges are available to craft.
 * Tue, Dec 29, 2015  1:58:01 PM - Remove @namespace and @require jQuery to use the Steam include.
+* Fri, Mar 25, 2016  7:55:00 PM - Updated to accommodate Steam Community changes.
 
 ###Notes
 
