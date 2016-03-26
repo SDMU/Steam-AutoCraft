@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam-AutoCraft
-// @version      1.2
+// @version      1.2.2
 // @description  AutoCraft Badges inside Steam
 // @author       10101000 aka Ryan Steed
 // @match        *://steamcommunity.com/*/gamecards/*
