@@ -15,7 +15,7 @@ var craftBadgeState = 0;
 var invLinks = jQuery('.gamecards_inventorylink');
 
 jQuery(document).ready(function(){
-    if (jQuery('.badge_card_to_collect').length === 0){
+    if (jQuery('.gamecard_badge_progress').length >= 1){
         checkBadge();
     }
 
