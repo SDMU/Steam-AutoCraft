@@ -16,7 +16,7 @@ Once installed, Steam-AutoCraft adds a new button labeled *"AutoCraft remaining 
 * Tue, Dec 29, 2015  1:58:01 PM - Small update to always show button but in disabled state if no badges are available to craft.
 * Tue, Dec 29, 2015  1:58:01 PM - Remove @namespace and @require jQuery to use the Steam include.
 * Fri, Mar 25, 2016  7:55:00 PM - Updated to accommodate Steam Community changes.
-* Sun, Mar 27, 2016  1:01:16 AM - Introduce automatic crafting of all craft-able badges for ALL craft-able games in addition to existing functionality. We now show the button on the game cards (*://steamcommunity.com/*/gamecards/*) & badges (*://steamcommunity.com/*/badges/*) pages.
+* Sun, Mar 27, 2016  1:01:16 AM - Introduce automatic crafting of all craft-able badges for ALL craft-able games in addition to existing functionality. We now show the button on the game cards (\*://steamcommunity.com/\*/gamecards/\*) & badges (\*://steamcommunity.com/\*/badges/\*) pages.
 
 ###Notes
 
