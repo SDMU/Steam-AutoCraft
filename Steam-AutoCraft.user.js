@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Steam-AutoCraft
-// @version      1.3
+// @version      1.3.1
 // @description  AutoCraft Steam Community Badges
-// @author       10101000 aka Ryan Steed
+// @author       10101000
 // @match        *://steamcommunity.com/*/gamecards/*
 // @match        *://steamcommunity.com/*/badges/*
-// @copyright    2016 10101000 (Ryan Steed)
+// @copyright    2016 10101000
 // @grant        none
 // ==/UserScript==
 
@@ -35,11 +35,11 @@ jQuery(document).ready(function(){
     if (window.sessionStorage.craftRecursive && craftBadgesState == 1){
         window.location.href = jQuery('div').find('.badge_row a.badge_row_overlay').attr('href');
         autoCraft();
-    } else if (window.sessionStorage.craftRecursive && craftBadgesState == 0 && craftBadgeState == 0 && jQuery('.gamecard_badge_progress').length >= 1){
+    } else if (window.sessionStorage.craftRecursive && craftBadgesState === 0 && craftBadgeState === 0 && jQuery('.gamecard_badge_progress').length >= 1){
         window.location.href = jQuery('div').find('.profile_small_header_text a.whiteLink').attr('href') + '/badges/';
-    } else if (!window.sessionStorage.craftRecursive && craftBadgesState == 0 && craftBadgeState == 0 && jQuery('.gamecard_badge_progress').length >= 1){
+    } else if (!window.sessionStorage.craftRecursive && craftBadgesState === 0 && craftBadgeState === 0 && jQuery('.gamecard_badge_progress').length >= 1){
         delete window.sessionStorage.autoCraftState;
-    } else if (window.sessionStorage.craftRecursive && craftBadgesState == 0 && craftBadgeState == 0 && jQuery('.badge_progress_tasks').length >= 1){
+    } else if (window.sessionStorage.craftRecursive && craftBadgesState === 0 && craftBadgeState === 0 && jQuery('.badge_progress_tasks').length >= 1){
         delete window.sessionStorage.craftRecursive;
         delete window.sessionStorage.autoCraftState;
     }
@@ -54,16 +54,6 @@ jQuery(document).ready(function(){
 });
 
 function addButton(){
-    // Add button to badges page
-    if (badgeLinks.length >= 1){
-        if (craftBadgesState == 1){
-            badgeLinks.append('<a><button type="button" class="btn_grey_black btn_small_thin" id="autocraft"><span>AutoCraft remaining badges</span></button></a>');
-            jQuery('#autocraft').click(function(){ window.sessionStorage.craftRecursive = 1; window.location.href = jQuery('div').find('.badge_row a.badge_row_overlay').attr('href'); autoCraft(); });           
-        } else {
-            badgeLinks.append('<a><button type="button" class="btn_disabled btn_grey_black btn_small_thin" id="autocraft" disabled><span>AutoCraft remaining badges</span></button></a>');
-        }
-    }
-
     // Add button to badge details page
     if (invLinks.length >= 1){
         if (craftBadgeState == 1){
@@ -72,6 +62,18 @@ function addButton(){
         } else {
             invLinks.append('<a><button type="button" class="btn_disabled btn_grey_grey btn_small_thin" id="autocraft" disabled><span>AutoCraft remaining badges</span></button></a>');
         }
+        return;
+    }
+
+    // Add button to badges page
+    if (badgeLinks.length >= 1){
+        if (craftBadgesState == 1){
+            badgeLinks.append('<a><button type="button" class="btn_grey_black btn_small_thin" id="autocraft"><span>AutoCraft remaining badges</span></button></a>');
+            jQuery('#autocraft').click(function(){ window.sessionStorage.craftRecursive = 1; window.location.href = jQuery('div').find('.badge_row a.badge_row_overlay').attr('href'); autoCraft(); });           
+        } else {
+            badgeLinks.append('<a><button type="button" class="btn_disabled btn_grey_black btn_small_thin" id="autocraft" disabled><span>AutoCraft remaining badges</span></button></a>');
+        }
+        return;
     }
 }
 
