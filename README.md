@@ -11,7 +11,10 @@ Please use the following URL to install inside your browser: https://raw.githubu
 
 Once installed, Steam-AutoCraft adds a new button labeled *"AutoCraft remaining badges"* to the Steam badges & gamecard pages. When activated, the script crafts the available badge, refreshes the page, and checks for another badge to craft until all trading cards are used. Activation from the badges page will craft ALL available badges for ALL possible games.
 
+The following settings are now available: Page Refresh Timeout, Card Refresh Timeout, and Game ID Blacklist. Page and Card refresh values both use the milliseconds metric. The Page refresh occurs after all badges have been crafted and is longer than the Card refresh. The card refresh occurs after a single badge as been crafted. The Game ID Blacklist value uses the format of id1,id2, i.e. 12345,67890. Any ID in the list will be excluded from automatic crafting when recursive mode is executed from the badges page.
+
 ###[Changelog](https://github.com/10101000/Steam-AutoCraft/blob/master/CHANGELOG)
+* Sat, Jun 11, 2016 11:28:08 PM - Release 1.4.5: Major update to rewrite core logic, fix bugs, and introduce new features: Settings & Game ID blacklisting. Also extend comments.
 * Thu, Apr 14, 2016 10:15:49 PM - Release 1.3.1: Minor update to fix the addButton function.
 * Sun, Mar 27, 2016  1:01:16 AM - Introduce automatic crafting of all craft-able badges for ALL craft-able games in addition to existing functionality. We now show the button on the game cards (\*://steamcommunity.com/\*/gamecards/\*) & badges (\*://steamcommunity.com/\*/badges/\*) pages.
 * Fri, Mar 25, 2016 7:55:00 PM - Updated to accommodate Steam Community changes.
