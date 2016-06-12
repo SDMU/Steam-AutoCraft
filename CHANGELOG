@@ -1,3 +1,4 @@
+Sat, Jun 11, 2016 11:28:08 PM - Release 1.4.5: Major update to rewrite core logic, fix bugs, and introduce new features: Settings & Game ID blacklisting. Also extend comments.
 Thu, Apr 14, 2016 10:15:49 PM - Release 1.3.1: Minor update to fix the addButton function.
 Sun, Mar 27, 2016  1:01:16 AM - Introduce automatic crafting of all craft-able badges for ALL craft-able games in addition to existing functionality. We now show the button on the game cards (*://steamcommunity.com/*/gamecards/*) & badges (*://steamcommunity.com/*/badges/*) pages.
 Fri, Mar 25, 2016 7:55:00 PM - Updated to accommodate Steam Community changes.
