@@ -14,13 +14,14 @@ Once installed, Steam-AutoCraft adds a new button labeled *"AutoCraft remaining 
 The following settings are now available: Page Refresh Timeout, Card Refresh Timeout, and Game ID Blacklist. Page and Card refresh values both use the milliseconds metric. The Page refresh occurs after all badges have been crafted and is longer than the Card refresh. The card refresh occurs after a single badge as been crafted. The Game ID Blacklist value uses the format of id1,id2, i.e. 12345,67890. Any ID in the list will be excluded from automatic crafting when recursive mode is executed from the badges page.
 
 ###[Changelog](https://github.com/10101000/Steam-AutoCraft/blob/master/CHANGELOG)
-* Sat, Jun 11, 2016 11:28:08 PM - Release 1.4.5: Major update to rewrite core logic, fix bugs, and introduce new features: Settings & Game ID blacklisting. Also extend comments.
-* Thu, Apr 14, 2016 10:15:49 PM - Release 1.3.1: Minor update to fix the addButton function.
-* Sun, Mar 27, 2016  1:01:16 AM - Introduce automatic crafting of all craft-able badges for ALL craft-able games in addition to existing functionality. We now show the button on the game cards (\*://steamcommunity.com/\*/gamecards/\*) & badges (\*://steamcommunity.com/\*/badges/\*) pages.
-* Fri, Mar 25, 2016 7:55:00 PM - Updated to accommodate Steam Community changes.
-* Tue, Dec 29, 2015  1:58:01 PM - Remove @namespace and @require jQuery to use the Steam include.
-* Tue, Dec 29, 2015  1:58:01 PM - Small update to always show button but in disabled state if no badges are available to craft.
-* Fri, Jul 10, 2015  3:11:53 PM - Re-commit of 1.1 release.
+* Thu, 23 Jun 2016 21:33:08 -0600    - Disable execution from pages other than page 1.
+* Sat, 11 Jun 2016 11:28:08 PM -0600 - Release 1.4.5: Major update to rewrite core logic, fix bugs, and introduce new features: Settings & Game ID blacklisting. Also extend comments.
+* Thu, 14 Apr 2016 10:15:49 PM -0600 - Release 1.3.1: Minor update to fix the addButton function.
+* Sun, 27 Mar 2016 1:01:16 AM -0600  - Introduce automatic crafting of all craft-able badges for ALL craft-able games in addition to existing functionality. We now show the button on the game cards (\*://steamcommunity.com/\*/gamecards/\*) & badges (\*://steamcommunity.com/\*/badges/\*) pages.
+* Fri, 25 Mar 2016 7:55:00 PM -0600  - Updated to accommodate Steam Community changes.
+* Tue, 29 Dec 2015 1:58:01 PM -0700  - Remove @namespace and @require jQuery to use the Steam include.
+* Tue, 29 Dec 2015 1:58:01 PM -0700  - Small update to always show button but in disabled state if no badges are available to craft.
+* Fri, 10 Jul 2015 3:11:53 PM -0600  - Re-commit of 1.1 release.
 
 
 
