@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam-AutoCraft
-// @version      1.4.5
+// @version      1.4.6
 // @description  AutoCraft Steam Community Badges
 // @author       10101000
 // @match        *://steamcommunity.com/*/gamecards/*
@@ -147,7 +147,14 @@ function addButton() {
         if (canCraftBadge == 1){
             badgeLinks.append('<a><button type="button" class="btn_grey_black btn_small_thin" id="autocraft"><span>AutoCraft remaining badges</span></button></a>');
             checkBlacklist();
-            jQuery('#autocraft').click(function(){ window.sessionStorage.craftRecursive = 1; window.location.href = gamecardHref; });
+
+            // Detect execution from page other than 1 and disable
+            if (jQuery('.pageLinks .pagelink').filter('a[href="?p=1"]').length >= 1) {
+                jQuery('#autocraft').addClass('btn_disabled');
+                jQuery('#autocraft').click(function(){ alert("Please execute from page 1."); });
+            } else {
+                jQuery('#autocraft').click(function(){ window.sessionStorage.craftRecursive = 1; window.location.href = gamecardHref; });
+            }
         } else {
             badgeLinks.append('<div class="btn_disabled btn_grey_black btn_small_thin" id="autocraft"><span>AutoCraft remaining badges</span></div>');
         }
@@ -203,7 +210,7 @@ function checkBlacklist() {
         gamecardHref = jQuery('div').find('.badge_row .badge_row_overlay').attr('href');
     }
 
-	// Redirect or clean up
+    // Redirect or clean up
     if ((gamecardHref.length >= 1) && (jQuery('a[href$="'+gamecardHref+'"]').filter('.badge_craft_button').length >= 1)) {
         redirect = 1;
     } else {
@@ -248,7 +255,7 @@ function saveSettings() {
 
     jQuery.each(settingsArray, function (i, setting) {
         if (setting.name === 'autocraft_setting_refresh_timeout') {
-			// Ensure that only integers are entered
+            // Ensure that only integers are entered
             if (setting.value.match(/^[0-9]+$/)) {
                 pageRefreshTimeoutms                     = setting.value;
                 window.localStorage.pageRefreshTimeoutms = setting.value;
@@ -259,7 +266,7 @@ function saveSettings() {
         }
 
         if (setting.name === 'autocraft_setting_craft_refresh_timeout') {
-			// Ensure that only integers are entered
+            // Ensure that only integers are entered
             if (setting.value.match(/^[0-9]+$/)) {
                 craftRefreshTimeoutms                     = setting.value;
                 window.localStorage.craftRefreshTimeoutms = setting.value;
@@ -270,7 +277,7 @@ function saveSettings() {
         }
 
         if (setting.name === 'autocraft_setting_blacklist') {
-			// Allow only integers and commas
+            // Allow only integers and commas
             if ((setting.value.match(/^[0-9,]+$/)) || (setting.value === '')) {
                 gameIdBlackList                     = setting.value;
                 window.localStorage.gameIdBlackList = setting.value;
