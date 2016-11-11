@@ -1,10 +1,9 @@
 // ==UserScript==
 // @name         Steam-AutoCraft
-// @version      1.4.6
+// @version      1.4.7
 // @description  AutoCraft Steam Community Badges
 // @author       10101000
-// @match        *://steamcommunity.com/*/gamecards/*
-// @match        *://steamcommunity.com/*/badges/*
+// @include      /^https?:\/\/steamcommunity.com\/+(id\/+[A-Za-z0-9$-_.+!*'(),]+|profiles\/+[0-9]+)\/+(badges\/?|gamecards\/+[0-9]+\/?)$/
 // @copyright    2016 10101000
 // @grant        none
 // ==/UserScript==
