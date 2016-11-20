@@ -1,15 +1,12 @@
 // ==UserScript==
 // @name         Steam-AutoCraft
-// @version      1.4.7
+// @version      1.4.8
 // @description  AutoCraft Steam Community Badges
 // @author       10101000
-// @include      /^https?:\/\/steamcommunity.com\/+(id\/+[A-Za-z0-9$-_.+!*'(),]+|profiles\/+[0-9]+)\/+(badges\/?|gamecards\/+[0-9]+\/?)$/
+// @include      /^https?:\/\/steamcommunity\.com\/+(id\/+[A-Za-z0-9$-_.+!*'(),]+|profiles\/+[0-9]+)\/+(badges\/?|gamecards\/+[0-9]+\/?)$/
 // @copyright    2016 10101000
 // @grant        none
 // ==/UserScript==
-
-// Isolate jQuery for compatibility with other scripts
-jQuery.noConflict();
 
 // Vars
 var canCraftBadge            = 0;
