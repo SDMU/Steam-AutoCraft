@@ -1,3 +1,4 @@
+Sun, 20 Nov 2016 15:55:34 -0700 - Escape dot in steamcommunity.com @include, remove jQuery.noConflict.
 Fri, 11 Nov 2016 10:17:12 -0700 - Minor update to improve URL activation.
 Thu, 23 Jun 2016 21:33:08 -0600 - Release 1.4.6: Disable execution from pages other than page 1.
 Sat, 11 Jun 2016 23:28:08 -0600 - Release 1.4.5: Major update to rewrite core logic, fix bugs, and introduce new features: Settings & Game ID blacklisting. Also extend comments.
