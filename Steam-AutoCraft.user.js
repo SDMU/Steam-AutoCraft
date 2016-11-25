@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Steam-AutoCraft
-// @version      1.4.8
+// @version      1.4.9
 // @description  AutoCraft Steam Community Badges
 // @author       10101000
-// @include      /^https?:\/\/steamcommunity\.com\/+(id\/+[A-Za-z0-9$-_.+!*'(),]+|profiles\/+[0-9]+)\/+(badges\/?|gamecards\/+[0-9]+\/?)$/
+// @include      /^https?:\/\/steamcommunity\.com\/+(id\/+[A-Za-z0-9$-_.+!*'(),]+|profiles\/+[0-9]+)\/+(badges\/?|gamecards\/+[0-9]+\/?).*$/
 // @copyright    2016 10101000
 // @grant        none
 // ==/UserScript==
@@ -17,15 +17,18 @@ var pageRefreshTimeoutmsDef  = 10000;
 var craftRefreshTimeoutms    = craftRefreshTimeoutmsDef;
 var pageRefreshTimeoutms     = pageRefreshTimeoutmsDef;
 var gameIdBlackList          = '';
+var gamecardHrefLinks        = '';
 var gamecardHref             = '';
 var redirect                 = 0;
 
 // Badges
-var badgeLinks    = jQuery('.badge_details_set_favorite');
+var badgeLinks         = jQuery('.badge_details_set_favorite');
+// Badges progress
+var badgeProgressTasks = jQuery('.badge_progress_tasks');
 // Gamecards
-var invLinks      = jQuery('.gamecards_inventorylink');
-// Gamecard badge progress
-var badgeProgress = jQuery('.gamecard_badge_progress');
+var invLinks           = jQuery('.gamecards_inventorylink');
+// Gamecard progress
+var badgeProgress      = jQuery('.gamecard_badge_progress');
 
 // Run
 jQuery(document).ready(function(){
@@ -41,7 +44,7 @@ jQuery(document).ready(function(){
 
     // Check for badges to craft
     if (jQuery('.badge_craft_button').length >= 1){
-        if ((jQuery('.badge_progress_tasks').length >= 1) || (badgeProgress.length >= 1)){
+        if ((badgeProgressTasks.length >= 1) || (badgeProgress.length >= 1)){
             canCraftBadge  = 1;
         }
     }
@@ -143,6 +146,7 @@ function addButton() {
         if (canCraftBadge == 1){
             badgeLinks.append('<a><button type="button" class="btn_grey_black btn_small_thin" id="autocraft"><span>AutoCraft remaining badges</span></button></a>');
             checkBlacklist();
+            gamecardHref = gamecardHrefLinks[0];
 
             // Detect execution from page other than 1 and disable
             if (jQuery('.pageLinks .pagelink').filter('a[href="?p=1"]').length >= 1) {
@@ -193,21 +197,21 @@ function checkSettings() {
 function checkBlacklist() {
     // Join csv blacklist with pipe for use inside regex
     var blacklist = gameIdBlackList.replace(/,/g, '|');
-    var regex     = "^http[s]?:\/\/steamcommunity.com\/id\/.+\/gamecards\/"+blacklist+"\/.*$";
+    var regex     = "^https?:\/\/steamcommunity\.com\/+(id\/+[A-Za-z0-9$-_.+!*'(),]+|profiles\/+[0-9]+)\/gamecards\/"+blacklist+"\/.*$";
     var re        = new RegExp(regex);
 
-    // Get first badge link
-    gamecardHref = jQuery('div').find('.badge_row a.badge_row_overlay').attr('href');
-    // Check for match
-    while (gamecardHref.match(re)) {
+    // Get badge links
+    gamecardHrefLinks = jQuery('div').find('.badge_row .badge_craft_button');
+    gamecardHrefLinks.each(function() {
+        gamecardHrefLink = jQuery(this).attr('href');
         // Disable badge link
-        jQuery('a[href="'+gamecardHref+'"]').remove();
-        // Find next
-        gamecardHref = jQuery('div').find('.badge_row .badge_row_overlay').attr('href');
-    }
+        if (gamecardHrefLink.match(re)) {
+            jQuery('a[href="'+gamecardHrefLink+'"]').filter('.badge_craft_button').remove();
+        }
+    });
 
     // Redirect or clean up
-    if ((gamecardHref.length >= 1) && (jQuery('a[href$="'+gamecardHref+'"]').filter('.badge_craft_button').length >= 1)) {
+    if (jQuery('.badge_craft_button').length >= 1) {
         redirect = 1;
     } else {
         delete window.sessionStorage.craftRecursive;
