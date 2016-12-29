@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam-AutoCraft
-// @version      1.4.9
+// @version      1.4.10
 // @description  AutoCraft Steam Community Badges
 // @author       10101000
 // @include      /^https?:\/\/steamcommunity\.com\/+(id\/+[A-Za-z0-9$-_.+!*'(),]+|profiles\/+[0-9]+)\/+(badges\/?|gamecards\/+[0-9]+\/?).*$/
@@ -52,9 +52,7 @@ jQuery(document).ready(function(){
     // Badge page logic
     if (isBadgesPage === 1) {
         if (window.sessionStorage.craftRecursive) {
-            if (canCraftBadge === 1) {
-                checkBlacklist();
-            } else {
+            if (canCraftBadge === 0) {
                 delete window.sessionStorage.craftRecursive;
             }
         }
@@ -73,7 +71,9 @@ jQuery(document).ready(function(){
     }
 
     // Always add button
-    addButton();
+    jQuery.when(checkBlacklist()).done( function() {
+        addButton();
+    });
 
     // Disable reset button when applicable
     if ((pageRefreshTimeoutms === pageRefreshTimeoutmsDef) && (craftRefreshTimeoutms === craftRefreshTimeoutmsDef) && (!gameIdBlackList)) {
@@ -88,7 +88,9 @@ jQuery(document).ready(function(){
         if (redirect === 1) {
             window.location.href = gamecardHref;
         }
-        autoCraft();
+        jQuery.when(checkBlacklist()).done( function() {
+            autoCraft();
+        });
     }
 });
 
@@ -145,7 +147,7 @@ function addButton() {
 
         if (canCraftBadge == 1){
             badgeLinks.append('<a><button type="button" class="btn_grey_black btn_small_thin" id="autocraft"><span>AutoCraft remaining badges</span></button></a>');
-            checkBlacklist();
+            gamecardHrefLinks = jQuery('div').find('.badge_row .badge_craft_button');
             gamecardHref = gamecardHrefLinks[0];
 
             // Detect execution from page other than 1 and disable
@@ -195,6 +197,7 @@ function checkSettings() {
 
 // Check blacklist
 function checkBlacklist() {
+    if (isGameCardsPage === 1) { return; }
     // Join csv blacklist with pipe for use inside regex
     var blacklist = gameIdBlackList.replace(/,/g, '|');
     var regex     = "^https?:\/\/steamcommunity\.com\/+(id\/+[A-Za-z0-9$-_.+!*'(),]+|profiles\/+[0-9]+)\/gamecards\/"+blacklist+"\/.*$";
