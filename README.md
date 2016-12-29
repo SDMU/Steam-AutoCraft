@@ -14,17 +14,12 @@ Once installed, Steam-AutoCraft adds a new button labeled *"AutoCraft remaining 
 The following settings are now available: Page Refresh Timeout, Card Refresh Timeout, and Game ID Blacklist. Page and Card refresh values both use the milliseconds metric. The Page refresh occurs after all badges have been crafted and is longer than the Card refresh. The card refresh occurs after a single badge as been crafted. The Game ID Blacklist value uses the format of id1,id2, i.e. 12345,67890. Any ID in the list will be excluded from automatic crafting when recursive mode is executed from the badges page.
 
 ###[Changelog](https://github.com/10101000/Steam-AutoCraft/blob/master/CHANGELOG)
+* Wed, 28 Dec 2016 23:01:25 -0700 - Release 1.4.10: Fix problem with blacklist.
 * Fri, 25 Nov 2016 15:12:12 -0700 - Release 1.4.9: Add .* to include sub-contexts within @include regular expression. Improve checkBlackList() function to fix bug involving Steam Awards Nomination Committee 2016 badge. Introduce badgeProgressTasks variable for consistency.
 * Sun, 20 Nov 2016 15:55:34 -0700 - Escape dot in steamcommunity.com @include, remove jQuery.noConflict.
 * Fri, 11 Nov 2016 10:17:12 -0700 - Minor update to improve URL activation.
 * Thu, 23 Jun 2016 21:33:08 -0600 - Release 1.4.6: Disable execution from pages other than page 1.
 * Sat, 11 Jun 2016 23:28:08 -0600 - Release 1.4.5: Major update to rewrite core logic, fix bugs, and introduce new features: Settings & Game ID blacklisting. Also extend comments.
-* Thu, 14 Apr 2016 22:15:49 -0600 - Release 1.3.1: Minor update to fix the addButton function.
-* Sun, 27 Mar 2016 01:01:16 -0600 - Introduce automatic crafting of all craft-able badges for ALL craft-able games in addition to existing functionality. We now show the button on the game cards (\*://steamcommunity.com/\*/gamecards/\*) & badges (\*://steamcommunity.com/\*/badges/\*) pages.
-* Fri, 25 Mar 2016 19:55:00 -0600 - Updated to accommodate Steam Community changes.
-* Tue, 29 Dec 2015 13:58:01 -0700 - Remove @namespace and @require jQuery to use the Steam include.
-* Tue, 29 Dec 2015 13:58:01 -0700 - Small update to always show button but in disabled state if no badges are available to craft.
-* Fri, 10 Jul 2015 15:11:53 -0600 - Re-commit of 1.1 release.
 
 
 
