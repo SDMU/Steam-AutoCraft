@@ -1,3 +1,4 @@
+Wed, 28 Dec 2016 23:01:25 -0700 - Release 1.4.10: Fix problem with blacklist.
 Fri, 25 Nov 2016 15:12:12 -0700 - Release 1.4.9: Add .* to include sub-contexts within @include regular expression. Improve checkBlackList() function to fix bug involving Steam Awards Nomination Committee 2016 badge. Introduce badgeProgressTasks variable for consistency. 
 Sun, 20 Nov 2016 15:55:34 -0700 - Escape dot in steamcommunity.com @include, remove jQuery.noConflict. 
 Fri, 11 Nov 2016 10:17:12 -0700 - Minor update to improve URL activation.
