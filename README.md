@@ -14,6 +14,7 @@ Once installed, Steam-AutoCraft adds a new button labeled *"AutoCraft remaining 
 The following settings are now available: Page Refresh Timeout, Card Refresh Timeout, and Game ID Blacklist. Page and Card refresh values both use the milliseconds metric. The Page refresh occurs after all badges have been crafted and is longer than the Card refresh. The card refresh occurs after a single badge as been crafted. The Game ID Blacklist value uses the format of id1,id2, i.e. 12345,67890. Any ID in the list will be excluded from automatic crafting when recursive mode is executed from the badges page.
 
 ###[Changelog](https://github.com/10101000/Steam-AutoCraft/blob/master/CHANGELOG)
+* Mon, 20 Feb 2017 13:49:08 -0700 - Release 1.4.11: Bug fixes.
 * Wed, 28 Dec 2016 23:01:25 -0700 - Release 1.4.10: Fix problem with blacklist.
 * Fri, 25 Nov 2016 15:12:12 -0700 - Release 1.4.9: Add .* to include sub-contexts within @include regular expression. Improve checkBlackList() function to fix bug involving Steam Awards Nomination Committee 2016 badge. Introduce badgeProgressTasks variable for consistency.
 * Sun, 20 Nov 2016 15:55:34 -0700 - Escape dot in steamcommunity.com @include, remove jQuery.noConflict.
