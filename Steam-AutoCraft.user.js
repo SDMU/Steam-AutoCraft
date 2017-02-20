@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam-AutoCraft
-// @version      1.4.10
+// @version      1.4.11
 // @description  AutoCraft Steam Community Badges
 // @author       10101000
 // @include      /^https?:\/\/steamcommunity\.com\/+(id\/+[A-Za-z0-9$-_.+!*'(),]+|profiles\/+[0-9]+)\/+(badges\/?|gamecards\/+[0-9]+\/?).*$/
@@ -60,11 +60,9 @@ jQuery(document).ready(function(){
 
     // Gamecard page logic
     if (isGameCardsPage === 1) {
-        if (canCraftBadge === 0) {
+        if ((canCraftBadge === 0) && (window.sessionStorage.craftRecursive)) {
             delete window.sessionStorage.autoCraftState;
-        }
 
-        if (window.sessionStorage.craftRecursive) {
             // If all badges have been crafted, load badges page
             window.location.href = jQuery('div').find('.profile_small_header_text a.whiteLink').attr('href') + '/badges/';
         }
@@ -89,7 +87,7 @@ jQuery(document).ready(function(){
             window.location.href = gamecardHref;
         }
         jQuery.when(checkBlacklist()).done( function() {
-            autoCraft();
+            craftBadge();
         });
     }
 });
@@ -175,7 +173,7 @@ function addButton() {
 // Auto-craft
 function autoCraft() {
     craftBadge();
-    setTimeout(function(){ checkBadge(); window.location.reload(true); }, pageRefreshTimeoutms);
+    setTimeout(function(){ window.location.reload(true); }, pageRefreshTimeoutms);
     window.sessionStorage.autoCraftState = 1;
 }
 
@@ -226,7 +224,9 @@ function checkBlacklist() {
 // Craft badge and refresh page
 function craftBadge() {
     jQuery('.badge_craft_button').click();
-    setTimeout(function(){ window.location.reload(true); }, craftRefreshTimeoutms);
+    if (isGameCardsPage === 1) {
+        setTimeout(function(){ window.location.reload(true); }, craftRefreshTimeoutms);
+    }
 }
 
 
