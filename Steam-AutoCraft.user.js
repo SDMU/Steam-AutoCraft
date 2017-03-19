@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam-AutoCraft
-// @version      1.4.11
+// @version      1.5
 // @description  AutoCraft Steam Community Badges
 // @author       10101000
 // @include      /^https?:\/\/steamcommunity\.com\/+(id\/+[A-Za-z0-9$-_.+!*'(),]+|profiles\/+[0-9]+)\/+(badges\/?|gamecards\/+[0-9]+\/?).*$/
@@ -68,7 +68,7 @@ jQuery(document).ready(function(){
         }
     }
 
-    // Always add button
+    // Check blacklist and add button
     jQuery.when(checkBlacklist()).done( function() {
         addButton();
     });
@@ -76,7 +76,7 @@ jQuery(document).ready(function(){
     // Disable reset button when applicable
     if ((pageRefreshTimeoutms === pageRefreshTimeoutmsDef) && (craftRefreshTimeoutms === craftRefreshTimeoutmsDef) && (!gameIdBlackList)) {
         jQuery('#autocraft_button_reset').addClass('btn_disabled');
-        jQuery('#autocraft_button_reset').prop("disabled",true);
+        jQuery('#autocraft_button_reset').prop('disabled',true);
     } else {
         jQuery('#autocraft_button_reset').removeClass('btn_disabled');
     }
@@ -94,78 +94,153 @@ jQuery(document).ready(function(){
 
 function addButton() {
     // Set HTML vars
-    var settingsHead           = '<h3 align="left">Steam-AutoCraft Settings</h3>';
-    var settingsForm           = '<form id="autocraft_settings_form" align="left">';
-    var settingsRefreshIn      = 'Page Refresh Timeout (ms): <input type="text" id="autocraft_setting_refresh_timeout" name="autocraft_setting_refresh_timeout" value="'+pageRefreshTimeoutms+'"> The the longer refresh that happens after crafting each badge in milliseconds.<br>';
-    var settingsCraftRefreshIn = 'Craft Refresh Timeout (ms): &nbsp;<input type="text" id="autocraft_setting_craft_refresh_timeout" name="autocraft_setting_craft_refresh_timeout" value="'+craftRefreshTimeoutms+'"> The short refresh that we set immediately after beginning a craft in milliseconds.<br>';
-    var settingsIDBlacklist    = 'Game ID Blacklist (id1,id2): &nbsp;&nbsp;<input type="text" id="autocraft_setting_blacklist" name="autocraft_setting_blacklist" value="'+gameIdBlackList+'"> Game ID blacklisting in the form of 12345,67890. We skip these games.<br>';
-    var settingsButtonReset    = '<input id="autocraft_button_reset" type="button" class="btn_grey_grey btn_small_thin" name="Reset" value="Reset" align="left">';
-    var settingsButtonSave     = '<input id="autocraft_button_save" type="button" class="btn_grey_grey btn_small_thin" name="Save" value="Save" align="left">';
+    var settingsDiv = `<div id="autocraft_settings_div" class="newmodal" style="position: fixed; z-index: 1000; left: 20%; top: 15%; display: none;">
+   <div class="newmodal_header_border">
+      <div class="newmodal_header">
+         <span id="autocraft_settings_title">Steam-AutoCraft Settings</span>
+         <div id="autocraft_settings_close" class="newmodal_close"/>
+      </div>
+   </div>
+   <div class="newmodal_content_border">
+      <div class="newmodal_content" style="max-height: 354px;">
+         <div class="market_dialog_content">
+            <div class="market_dialog_iteminfo">
+               <div id="autocraft_settings_list" class="market_content_block market_home_listing_table market_home_main_listing_table market_listing_table">
+                  <form id="autocraft_settings_form" align="left">
+                  <div class="market_listing_row market_recent_listing_row">
+                     Page Refresh Timeout (ms): <input type="text" class="market_dialog_input" id="autocraft_setting_refresh_timeout" name="autocraft_setting_refresh_timeout" value="`+pageRefreshTimeoutms+`"> The the longer refresh that happens after crafting each badge in milliseconds.
+                  <div style="clear: both"/>
+                  <div class="market_listing_row market_recent_listing_row">
+                     Craft Refresh Timeout (ms): <input type="text" class="market_dialog_input" id="autocraft_setting_craft_refresh_timeout" name="autocraft_setting_craft_refresh_timeout" value="`+craftRefreshTimeoutms+`"> The short refresh that we set immediately after beginning a craft in milliseconds.
+                  <div style="clear: both"/>
+                  <div class="market_listing_row market_recent_listing_row">
+                     Game ID Blacklist (id1,id2):&nbsp;<input type="text" class="market_dialog_input" id="autocraft_setting_blacklist" name="autocraft_setting_blacklist" value="`+gameIdBlackList+`"> Game ID blacklisting in the form of 12345,67890. We skip these games.
+                  <div style="clear: both"/>
+                  <div class="market_dialog_content_separator"></div>
+                  <div class="market_dialog_content market_dialog_content_dark">
+                     <div class="market_sell_dialog_input_area">
+                        <input id="autocraft_button_reset" type="button" class="btn_grey_grey btn_small_thin" name="Reset" value="Reset" align="center">
+                        <input id="autocraft_button_save" type="button" class="btn_grey_grey btn_small_thin" name="Save" value="Save" align="center">
+                     </div>
+                  </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+</div>`
+
+    jQuery('body').append('<div id="autocraft_settings_background_div" class="newmodal_background" style="opacity: 0.8; display: none;">');
 
     // Add button to badge details page
     if (isGameCardsPage === 1){
         // Add settings div
-        jQuery('<div/>', {
-            id:    'autocraft_settings_div',
-            class: 'badge_details_set_favorite',
-            title: 'Steam-AutoCraft Settings',
-            style: 'display: none;',
-            align: 'left'
-        }).insertAfter('.gamecards_inventorylink');
-        jQuery('#autocraft_settings_div').append('<p align="left">'+settingsHead+'</p><p align="left">'+settingsForm+'</p><p align="left">'+settingsRefreshIn+'</p><p align="left">'+settingsCraftRefreshIn+'</p><p align="left">'+settingsIDBlacklist+'</p><p align="left">'+settingsButtonReset+settingsButtonSave+'</form></p>');
-        jQuery('#autocraft_settings_form #autocraft_button_reset').click(function(){ resetSettings(); });
-        jQuery('#autocraft_settings_form #autocraft_button_save').click(function(){ saveSettings(); });
+        jQuery(settingsDiv).insertAfter('.gamecards_inventorylink');
+        jQuery('#autocraft_button_reset').click(function(){ resetSettings(); });
+        jQuery('#autocraft_button_save').click(function(){ saveSettings(); });
+
+        // Buttons
+        invLinks.append('<a><button type="button" class="btn_grey_grey btn_small_thin btn_disabled" id="autocraft" disabled><span>AutoCraft badges&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></button><button type="button" class="btn_grey_grey btn_small_thin" id="autocraft_settings"><span>&#9881;</span></button></a>&nbsp;');
+
+        // Set initial position
+        var position = jQuery('#autocraft').position();
+        var x        = position.left;
+        var y        = position.top;
+        x           -= (jQuery('#autocraft_settings').outerWidth() - jQuery('#autocraft').outerWidth());
+        jQuery('#autocraft_settings').css({
+            position: 'absolute',
+            zIndex:   500,
+            top:      y,
+            left:     x
+        })
+
+        // Transform to overlay
+        jQuery('#autocraft_settings').css({
+            position:            'element(#autocraft)',
+            zIndex:              500,
+            transform:           'translateX(-100%)',
+            'background-color':  'transparent',
+            'background-repeat': 'no-repeat',
+            border:              'none',
+            cursor:              'pointer',
+            overflow:            'hidden',
+            outline:             'none',
+            top:                 '',
+            left:                ''
+        })
+
+        jQuery('#autocraft_settings').click(function(){ toggleSettings(); });
+        jQuery('#autocraft_settings_close').click(function(){ toggleSettings(); });
 
         if (canCraftBadge == 1){
-            invLinks.append('<a><button type="button" class="btn_grey_grey btn_small_thin" id="autocraft"><span>AutoCraft remaining badges</span></button></a>');
             jQuery('#autocraft').click(function(){ autoCraft(); });
-        } else {
-            invLinks.append('<a><button type="button" class="btn_disabled btn_grey_grey btn_small_thin" id="autocraft" disabled><span>AutoCraft remaining badges</span></button></a>');
+            jQuery('#autocraft').removeClass('btn_disabled');
+            jQuery('#autocraft').prop('disabled',false);
         }
 
-        // Settings button
-        jQuery('<a><button type="button" class="btn_grey_grey btn_small_thin" id="autocraft_settings"><span>&#9881;</span></button></a>').insertAfter('#autocraft');
-        jQuery('#autocraft_settings').click(function(){ toggleSettings(); });
         return;
     }
 
     // Add button to badges page
     if (isBadgesPage === 1){
         // Add settings div
-        jQuery('<div/>', {
-            id: 'autocraft_settings_div',
-            class: 'badge_details_set_favorite',
-            title: 'Steam-AutoCraft Settings',
-            style: 'display: none;',
-            align: 'left'
-        }).insertAfter('.badge_details_set_favorite');
-        jQuery('#autocraft_settings_div').append('<p align="left">'+settingsHead+'</p><p align="left">'+settingsForm+'</p><p align="left">'+settingsRefreshIn+'</p><p align="left">'+settingsCraftRefreshIn+'</p><p align="left">'+settingsIDBlacklist+'</p><p align="left">'+settingsButtonReset+settingsButtonSave+'</form></p>');
-        jQuery('#autocraft_settings_form #autocraft_button_reset').click(function(){ resetSettings(); });
-        jQuery('#autocraft_settings_form #autocraft_button_save').click(function(){ saveSettings(); });
+        jQuery(settingsDiv).insertAfter('.badge_details_set_favorite');
+        jQuery('#autocraft_button_reset').click(function(){ resetSettings(); });
+        jQuery('#autocraft_button_save').click(function(){ saveSettings(); });
+
+        // Buttons
+        badgeLinks.append('<a><button type="button" class="btn_grey_black btn_small_thin btn_disabled" id="autocraft"><span>AutoCraft all badges&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></button><button class="btn_grey_black btn_small_thin" id="autocraft_settings"><span>&#9881;</span></button></a>&nbsp;');
+
+        // Set initial position
+        var position = jQuery('#autocraft').position();
+        var x        = position.left;
+        var y        = position.top;
+        x           -= (jQuery('#autocraft_settings').outerWidth() - jQuery('#autocraft').outerWidth());
+        jQuery('#autocraft_settings').css({
+            position: 'absolute',
+            zIndex:   500,
+            top:      y,
+            left:     x
+        })
+
+        // Transform to overlay
+        jQuery('#autocraft_settings').css({
+            position:            'element(#autocraft)',
+            zIndex:              500,
+            transform:           'translateX(-100%)',
+            'background-color':  'transparent',
+            'background-repeat': 'no-repeat',
+            border:              'none',
+            cursor:              'pointer',
+            overflow:            'hidden',
+            outline:             'none',
+            top:                 '',
+            left:                ''
+        })
+
+        jQuery('#autocraft_settings').click(function(){ toggleSettings(); });
+        jQuery('#autocraft_settings_close').click(function(){ toggleSettings(); });
+
+        // Load economy.css
+        jQuery('head').append('<link href="/public/css/skin_1/economy.css" rel="stylesheet" type="text/css">');
 
         if (canCraftBadge == 1){
-            badgeLinks.append('<a><button type="button" class="btn_grey_black btn_small_thin" id="autocraft"><span>AutoCraft remaining badges</span></button></a>');
-            gamecardHrefLinks = jQuery('div').find('.badge_row .badge_craft_button');
-            gamecardHref = gamecardHrefLinks[0];
-
             // Detect execution from page other than 1 and disable
-            if (jQuery('.pageLinks .pagelink').filter('a[href="?p=1"]').length >= 1) {
-                jQuery('#autocraft').addClass('btn_disabled');
-                jQuery('#autocraft').click(function(){ alert("Please execute from page 1."); });
+            if (!(jQuery('.pageLinks .pagelink').filter('a[href="?p=1"]').length >= 1)) {
+                gamecardHrefLinks = jQuery('div').find('.badge_row .badge_craft_button');
+                gamecardHref = gamecardHrefLinks[0];
+                if (typeof gamecardHref !== 'undefined') {
+                    jQuery('#autocraft').removeClass('btn_disabled');
+                    jQuery('#autocraft').prop('disabled',false);
+                    jQuery('#autocraft').click(function(){ window.sessionStorage.craftRecursive = 1; window.location.href = gamecardHref; });
+                } else {
+                    delete window.sessionStorage.autoCraftState;
+                }
             } else {
-                jQuery('#autocraft').click(function(){ window.sessionStorage.craftRecursive = 1; window.location.href = gamecardHref; });
+                jQuery('#autocraft').click(function(){ alert("Please execute from page 1."); });
             }
-        } else {
-            badgeLinks.append('<div class="btn_disabled btn_grey_black btn_small_thin" id="autocraft"><span>AutoCraft remaining badges</span></div>');
         }
 
-        // Settings button
-        jQuery('<div class="btn_grey_black btn_small_thin" id="autocraft_settings"><span>&#9881;</span></div>').insertAfter('#autocraft');
-        jQuery('#autocraft_settings').click(function(){ toggleSettings(); });
-        jQuery('#autocraft_button_reset').removeClass('btn_grey_grey');
-        jQuery('#autocraft_button_reset').addClass('btn_grey_black');
-        jQuery('#autocraft_button_save').removeClass('btn_grey_grey');
-        jQuery('#autocraft_button_save').addClass('btn_grey_black');
         return;
     }
 }
@@ -197,7 +272,7 @@ function checkSettings() {
 function checkBlacklist() {
     if (isGameCardsPage === 1) { return; }
     // Join csv blacklist with pipe for use inside regex
-    var blacklist = gameIdBlackList.replace(/,/g, '|');
+    var blacklist = gameIdBlackList.replace(/[ \t]*,[ \t]*/g, '|');
     var regex     = "^https?:\/\/steamcommunity\.com\/+(id\/+[A-Za-z0-9$-_.+!*'(),]+|profiles\/+[0-9]+)\/gamecards\/"+blacklist+"\/.*$";
     var re        = new RegExp(regex);
 
@@ -205,9 +280,12 @@ function checkBlacklist() {
     gamecardHrefLinks = jQuery('div').find('.badge_row .badge_craft_button');
     gamecardHrefLinks.each(function() {
         gamecardHrefLink = jQuery(this).attr('href');
+
         // Disable badge link
-        if (gamecardHrefLink.match(re)) {
-            jQuery('a[href="'+gamecardHrefLink+'"]').filter('.badge_craft_button').remove();
+        if (blacklist.length > 0) {
+            if (gamecardHrefLink.match(re)) {
+                jQuery('a[href="'+gamecardHrefLink+'"]').filter('.badge_craft_button').replaceWith('5 of 5 cards collected');
+            }
         }
     });
 
@@ -217,7 +295,7 @@ function checkBlacklist() {
     } else {
         delete window.sessionStorage.craftRecursive;
         jQuery('#autocraft').addClass('btn_disabled');
-        jQuery('#autocraft').prop("disabled",true);
+        jQuery('#autocraft').prop('disabled',true);
     }
 }
 
@@ -228,7 +306,6 @@ function craftBadge() {
         setTimeout(function(){ window.location.reload(true); }, craftRefreshTimeoutms);
     }
 }
-
 
 // Reset settings
 function resetSettings() {
@@ -281,7 +358,7 @@ function saveSettings() {
 
         if (setting.name === 'autocraft_setting_blacklist') {
             // Allow only integers and commas
-            if ((setting.value.match(/^[0-9,]+$/)) || (setting.value === '')) {
+            if ((setting.value.match(/^([ \t]*,?[0-9]+,?[ \t]*)+$/)) || (setting.value === '')) {
                 gameIdBlackList                     = setting.value;
                 window.localStorage.gameIdBlackList = setting.value;
             } else {
@@ -301,6 +378,7 @@ function saveSettings() {
 function toggleSettings() {
     // Toggle the settings
     jQuery('#autocraft_settings_div').toggle();
+    jQuery('#autocraft_settings_background_div').fadeToggle();
 
     // Change look on view
     if (jQuery('#autocraft_settings_div').is(':visible')) {
@@ -308,4 +386,21 @@ function toggleSettings() {
     } else {
         jQuery('#autocraft_settings').removeClass('btn_disabled');
     }
+
+    // Close on outside click
+    var inside_autocraft_settings=false;
+
+    jQuery('#autocraft_settings_div').hover(function(){
+        inside_autocraft_settings=true;
+    }, function(){
+        inside_autocraft_settings=false;
+    });
+
+    jQuery('body').mouseup(function(){
+        if((jQuery('#autocraft_settings_div').is(':visible')) && (!inside_autocraft_settings)) {
+            jQuery('#autocraft_settings_div').hide();
+            jQuery('#autocraft_settings_background_div').fadeOut();
+            jQuery('#autocraft_settings').removeClass('btn_disabled');
+        }
+    });
 }
