@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam-AutoCraft
-// @version      1.5.1
+// @version      1.5.2
 // @description  AutoCraft Steam Community Badges
 // @author       10101000
 // @include      /^https?:\/\/steamcommunity\.com\/+(id\/+[A-Za-z0-9$-_.+!*'(),]+|profiles\/+[0-9]+)\/+(badges\/?|gamecards\/+[0-9]+\/?).*$/
@@ -132,6 +132,20 @@ function addButton() {
 
     jQuery('body').append('<div id="autocraft_settings_background_div" class="newmodal_background" style="opacity: 0.8; display: none;">');
 
+    // Load economy.css
+    var economyCSS = '/public/css/skin_1/economy.css';
+    if(!(jQuery("link[href*='"+economyCSS+"']").attr('rel') === 'stylesheet')){
+        console.log("adding css");
+        jQuery('head').append('<link href="'+economyCSS+'" rel="stylesheet" type="text/css">');
+    }
+
+    // Load economy.css
+    var economyMarketCSS = '/public/css/skin_1/economy_market.css';
+    if(!(jQuery("link[href*='"+economyMarketCSS+"']").attr('rel') === 'stylesheet')){
+        console.log("adding market css");
+        jQuery('head').append('<link href="'+economyMarketCSS+'" rel="stylesheet" type="text/css">');
+    }
+
     // Add button to badge details page
     if (isGameCardsPage === 1){
         // Add settings div
@@ -220,10 +234,6 @@ function addButton() {
 
         jQuery('#autocraft_settings').click(function(){ toggleSettings(); });
         jQuery('#autocraft_settings_close').click(function(){ toggleSettings(); });
-
-        // Load economy.css
-        jQuery('head').append('<link href="/public/css/skin_1/economy.css" rel="stylesheet" type="text/css">');
-        jQuery('head').append('<link href="/public/css/skin_1/economy_market.css" rel="stylesheet" type="text/css">');
 
         if (canCraftBadge == 1){
             // Detect execution from page other than 1 and disable
