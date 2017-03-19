@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam-AutoCraft
-// @version      1.5
+// @version      1.5.1
 // @description  AutoCraft Steam Community Badges
 // @author       10101000
 // @include      /^https?:\/\/steamcommunity\.com\/+(id\/+[A-Za-z0-9$-_.+!*'(),]+|profiles\/+[0-9]+)\/+(badges\/?|gamecards\/+[0-9]+\/?).*$/
@@ -223,6 +223,7 @@ function addButton() {
 
         // Load economy.css
         jQuery('head').append('<link href="/public/css/skin_1/economy.css" rel="stylesheet" type="text/css">');
+        jQuery('head').append('<link href="/public/css/skin_1/economy_market.css" rel="stylesheet" type="text/css">');
 
         if (canCraftBadge == 1){
             // Detect execution from page other than 1 and disable
