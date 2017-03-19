@@ -1,3 +1,4 @@
+Sun, 19 Mar 2017 05:10:12 -0600 - Release 1.5: New features and bug fixes. Renamed buttons. Re-designed settings to use Steam's newmodal style popup. Settings button now overlays autocraft buttons to appear as a single element. Blacklist input now supports spaces. Fixed bugs with blacklist crafting.
 Mon, 20 Feb 2017 13:49:08 -0700 - Release 1.4.11: Bug fixes.
 Wed, 28 Dec 2016 23:01:25 -0700 - Release 1.4.10: Fix problem with blacklist.
 Fri, 25 Nov 2016 15:12:12 -0700 - Release 1.4.9: Add .* to include sub-contexts within @include regular expression. Improve checkBlackList() function to fix bug involving Steam Awards Nomination Committee 2016 badge. Introduce badgeProgressTasks variable for consistency. 
@@ -11,8 +12,3 @@ Fri, 25 Mar 2016 19:55:00 -0600 - Updated to accommodate Steam Community changes
 Tue, 29 Dec 2015 13:58:01 -0700 - Remove @namespace and @require jQuery to use the Steam include.
 Tue, 29 Dec 2015 13:58:01 -0700 - Small update to always show button but in disabled state if no badges are available to craft.
 Fri, 10 Jul 2015 15:11:53 -0600 - Re-commit of 1.1 release.
-
-
-
-
-
