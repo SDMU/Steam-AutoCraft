@@ -135,14 +135,12 @@ function addButton() {
     // Load economy.css
     var economyCSS = '/public/css/skin_1/economy.css';
     if(!(jQuery("link[href*='"+economyCSS+"']").attr('rel') === 'stylesheet')){
-        console.log("adding css");
         jQuery('head').append('<link href="'+economyCSS+'" rel="stylesheet" type="text/css">');
     }
 
     // Load economy.css
     var economyMarketCSS = '/public/css/skin_1/economy_market.css';
     if(!(jQuery("link[href*='"+economyMarketCSS+"']").attr('rel') === 'stylesheet')){
-        console.log("adding market css");
         jQuery('head').append('<link href="'+economyMarketCSS+'" rel="stylesheet" type="text/css">');
     }
 
