@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam-AutoCraft
-// @version      1.5.2
+// @version      1.6
 // @description  AutoCraft Steam Community Badges
 // @author       10101000
 // @include      /^https?:\/\/steamcommunity\.com\/+(id\/+[A-Za-z0-9$-_.+!*'(),]+|profiles\/+[0-9]+)\/+(badges\/?|gamecards\/+[0-9]+\/?).*$/
@@ -9,17 +9,21 @@
 // ==/UserScript==
 
 // Vars
+var badgesPageURL            = '/badges/';
+var badgeCraftLimit          = '';
 var canCraftBadge            = 0;
+var craftRefreshTimeoutmsDef = 2000;
+var craftRefreshTimeoutms    = craftRefreshTimeoutmsDef;
+var gamecardHref             = '';
+var gamecardHrefLinks        = '';
+var gameIdBlackList          = '';
 var isBadgesPage             = 0;
 var isGameCardsPage          = 0;
-var craftRefreshTimeoutmsDef = 2000;
 var pageRefreshTimeoutmsDef  = 10000;
-var craftRefreshTimeoutms    = craftRefreshTimeoutmsDef;
 var pageRefreshTimeoutms     = pageRefreshTimeoutmsDef;
-var gameIdBlackList          = '';
-var gamecardHrefLinks        = '';
-var gamecardHref             = '';
 var redirect                 = 0;
+var skipCraft                = 0;
+var steamAutoCraftVersion    = '1.6';
 
 // Badges
 var badgeLinks         = jQuery('.badge_details_set_favorite');
@@ -51,6 +55,7 @@ jQuery(document).ready(function(){
 
     // Badge page logic
     if (isBadgesPage === 1) {
+        window.sessionStorage.badgesPageURL = window.location.href;
         if (window.sessionStorage.craftRecursive) {
             if (canCraftBadge === 0) {
                 delete window.sessionStorage.craftRecursive;
@@ -63,9 +68,26 @@ jQuery(document).ready(function(){
         if ((canCraftBadge === 0) && (window.sessionStorage.craftRecursive)) {
             delete window.sessionStorage.autoCraftState;
 
+            if(window.localStorage.badgeCraftLimit) {
+               if(!window.sessionStorage.craftCount) { window.sessionStorage.craftCount = 0 }
+               window.sessionStorage.craftCount = +window.sessionStorage.craftCount + 1;
+            }
+
+            if(window.sessionStorage.badgesPageURL) {
+                badgesPageURL = window.sessionStorage.badgesPageURL;
+            }
+            delete window.sessionStorage.badgesPageURL;
+
             // If all badges have been crafted, load badges page
-            window.location.href = jQuery('div').find('.profile_small_header_text a.whiteLink').attr('href') + '/badges/';
+            window.location.href = badgesPageURL;
         }
+    }
+
+    // Detect conflict with userscript
+    if (jQuery('#autocraft').length >= 1) {
+        var steamAutoCraftConflictError = 'Conflict detected, please remove or disable either the Steam-AutoCraft extension or the userscript.';
+        alert(steamAutoCraftConflictError);
+        throw new Error(steamAutoCraftConflictError);
     }
 
     // Check blacklist and add button
@@ -83,18 +105,31 @@ jQuery(document).ready(function(){
 
     // Start autoCraft
     if ((canCraftBadge === 1) && ((window.sessionStorage.autoCraftState) || (window.sessionStorage.craftRecursive))) {
+
+        if ((window.localStorage.badgeCraftLimit) && (window.sessionStorage.craftCount)) {
+           if (+window.sessionStorage.craftCount >= +window.localStorage.badgeCraftLimit) {
+              delete window.sessionStorage.craftRecursive;
+              delete window.sessionStorage.craftCount;
+              redirect  = 0;
+              skipCraft = 1;
+           }
+        }
+
         if (redirect === 1) {
             window.location.href = gamecardHref;
         }
         jQuery.when(checkBlacklist()).done( function() {
-            craftBadge();
+            if (skipCraft === 0) {
+               craftBadge();
+            }
         });
     }
 });
 
 function addButton() {
     // Set HTML vars
-    var settingsDiv = `<div id="autocraft_settings_div" class="newmodal" style="position: fixed; z-index: 1000; left: 20%; top: 15%; display: none;">
+    var settingsDiv = `
+<div id="autocraft_settings_div" class="newmodal" style="position: fixed; z-index: 1000; left: 50%; top: 15%; display: none; transform: translateX(-50%);">
    <div class="newmodal_header_border">
       <div class="newmodal_header">
          <span id="autocraft_settings_title">Steam-AutoCraft Settings</span>
@@ -102,31 +137,56 @@ function addButton() {
       </div>
    </div>
    <div class="newmodal_content_border">
-      <div class="newmodal_content" style="max-height: 354px;">
+      <div class="newmodal_content">
          <div class="market_dialog_content">
             <div class="market_dialog_iteminfo">
                <div id="autocraft_settings_list" class="market_content_block market_home_listing_table market_home_main_listing_table market_listing_table">
                   <form id="autocraft_settings_form" align="left">
-                  <div class="market_listing_row market_recent_listing_row">
-                     Page Refresh Timeout (ms): <input type="text" class="market_dialog_input" id="autocraft_setting_refresh_timeout" name="autocraft_setting_refresh_timeout" value="`+pageRefreshTimeoutms+`"> The the longer refresh that happens after crafting each badge in milliseconds.
-                  <div style="clear: both"/>
-                  <div class="market_listing_row market_recent_listing_row">
-                     Craft Refresh Timeout (ms): <input type="text" class="market_dialog_input" id="autocraft_setting_craft_refresh_timeout" name="autocraft_setting_craft_refresh_timeout" value="`+craftRefreshTimeoutms+`"> The short refresh that we set immediately after beginning a craft in milliseconds.
-                  <div style="clear: both"/>
-                  <div class="market_listing_row market_recent_listing_row">
-                     Game ID Blacklist (id1,id2):&nbsp;<input type="text" class="market_dialog_input" id="autocraft_setting_blacklist" name="autocraft_setting_blacklist" value="`+gameIdBlackList+`"> Game ID blacklisting in the form of 12345,67890. We skip these games.
-                  <div style="clear: both"/>
-                  <div class="market_dialog_content_separator"></div>
-                  <div class="market_dialog_content market_dialog_content_dark">
-                     <div class="market_sell_dialog_input_area">
-                        <input id="autocraft_button_reset" type="button" class="btn_grey_grey btn_small_thin" name="Reset" value="Reset" align="center">
-                        <input id="autocraft_button_save" type="button" class="btn_grey_grey btn_small_thin" name="Save" value="Save" align="center">
+                     <div class="market_listing_row market_recent_listing_row">
+                        <div class="market_listing_item_name_block">
+                           <span class="market_listing_item_name" style="display:inline-block; width:175px">Page Refresh Timeout (ms):</span>
+                           <span><input type="text" class="market_dialog_input" style="width: 50px" id="autocraft_setting_refresh_timeout" name="autocraft_setting_refresh_timeout" value="`+pageRefreshTimeoutms+`"></span>
+                           <span class="market_listing_game_name">The the longer refresh that happens after crafting each badge in milliseconds.</span>
+                        </div>
+                        <div style="clear: both"/>
                      </div>
-                  </div>
+                     <div class="market_listing_row market_recent_listing_row">
+                        <div class="market_listing_item_name_block">
+                           <span class="market_listing_item_name" style="display:inline-block; width:175px">Craft Refresh Timeout (ms):</span>
+                           <span><input type="text" class="market_dialog_input" style="width: 50px" id="autocraft_setting_craft_refresh_timeout" name="autocraft_setting_craft_refresh_timeout" value="`+craftRefreshTimeoutms+`"></span>
+                           <span class="market_listing_game_name">The short refresh that we set immediately after beginning a craft in milliseconds.</span>
+                        </div>
+                        <div style="clear: both"/>
+                     </div>
+                     <div class="market_listing_row market_recent_listing_row">
+                        <div class="market_listing_item_name_block">
+                           <span class="market_listing_item_name" style="display:inline-block; width:175px">Game ID Blacklist (id1,id2):</span>
+                           <span><input type="text" class="market_dialog_input" style="width: 50px" id="autocraft_setting_blacklist" name="autocraft_setting_blacklist" value="`+gameIdBlackList+`"></span>
+                           <span class="market_listing_game_name">Game ID blacklisting in the form of 12345,67890. We skip these games.</span>
+                        </div>
+                        <div style="clear: both"/>
+                     </div>
+                     <div class="market_listing_row market_recent_listing_row">
+                        <div class="market_listing_item_name_block">
+                           <span class="market_listing_item_name" style="display:inline-block; width:175px">Badge Crafting Limit:</span>
+                           <span><input type="text" class="market_dialog_input" style="width: 50px" id="autocraft_setting_badgelimit" name="autocraft_setting_badgelimit" value="`+badgeCraftLimit+`"></span>
+                           <span class="market_listing_game_name">Number of badges to craft. Stop once we hit this limit.</span>
+                        </div>
+                        <div style="clear: both"/>
+                     </div>
+                     <br>
+                     <div class="market_dialog_content_separator"></div>
+                     <div class="market_dialog_content market_dialog_content_dark">
+                        <div class="market_sell_dialog_input_area">
+                           <input id="autocraft_button_reset" type="button" class="btn_grey_grey btn_small_thin" name="Reset" value="Reset" align="center">
+                           <input id="autocraft_button_save" type="button" class="btn_grey_grey btn_small_thin" name="Save" value="Save" align="center">
+                        </div>
+                     </div>
                   </form>
                </div>
             </div>
          </div>
+         <p align="center" class="market_listing_game_name">Steam-AutoCraft Version: `+steamAutoCraftVersion+`</p>
       </div>
 </div>`
 
@@ -152,7 +212,13 @@ function addButton() {
         jQuery('#autocraft_button_save').click(function(){ saveSettings(); });
 
         // Buttons
-        invLinks.append('<a><button type="button" class="btn_grey_grey btn_small_thin btn_disabled" id="autocraft" disabled><span>AutoCraft badges&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></button><button type="button" class="btn_grey_grey btn_small_thin" id="autocraft_settings"><span>&#9881;</span></button></a>&nbsp;');
+        invLinks.append(`
+<a class="btn_grey_grey btn_small_thin btn_disabled" id="autocraft">
+   <span>AutoCraft&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+</a>
+<a class="btn_grey_grey btn_small_thin" id="autocraft_settings">
+   <span>&#9881;</span>
+</a>`);
 
         // Set initial position
         var position = jQuery('#autocraft').position();
@@ -201,7 +267,23 @@ function addButton() {
         jQuery('#autocraft_button_save').click(function(){ saveSettings(); });
 
         // Buttons
-        badgeLinks.append('<a><button type="button" class="btn_grey_black btn_small_thin btn_disabled" id="autocraft"><span>AutoCraft all badges&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></button><button class="btn_grey_black btn_small_thin" id="autocraft_settings"><span>&#9881;</span></button></a>&nbsp;');
+        var autoCraftButtonText = 'AutoCraft all badges';
+
+        if (window.localStorage.badgeCraftLimit) {
+            if (+window.localStorage.badgeCraftLimit === 1) {
+                autoCraftButtonText = 'AutoCraft 1 badge';
+            } else {
+                autoCraftButtonText = 'AutoCraft '+window.localStorage.badgeCraftLimit+' badges';
+            }
+        }
+
+        badgeLinks.append(`
+<a class="btn_grey_black btn_small_thin btn_disabled" id="autocraft">
+   <span>`+autoCraftButtonText+`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+</a>
+<a class="btn_grey_black btn_small_thin" id="autocraft_settings">
+   <span>&#9881;</span>
+</a>`);
 
         // Set initial position
         var position = jQuery('#autocraft').position();
@@ -234,19 +316,14 @@ function addButton() {
         jQuery('#autocraft_settings_close').click(function(){ toggleSettings(); });
 
         if (canCraftBadge == 1){
-            // Detect execution from page other than 1 and disable
-            if (!(jQuery('.pageLinks .pagelink').filter('a[href="?p=1"]').length >= 1)) {
-                gamecardHrefLinks = jQuery('div').find('.badge_row .badge_craft_button');
-                gamecardHref = gamecardHrefLinks[0];
-                if (typeof gamecardHref !== 'undefined') {
-                    jQuery('#autocraft').removeClass('btn_disabled');
-                    jQuery('#autocraft').prop('disabled',false);
-                    jQuery('#autocraft').click(function(){ window.sessionStorage.craftRecursive = 1; window.location.href = gamecardHref; });
-                } else {
-                    delete window.sessionStorage.autoCraftState;
-                }
+            gamecardHrefLinks = jQuery('div').find('.badge_row .badge_craft_button');
+            gamecardHref = gamecardHrefLinks[0];
+            if (typeof gamecardHref !== 'undefined') {
+                jQuery('#autocraft').removeClass('btn_disabled');
+                jQuery('#autocraft').prop('disabled',false);
+                jQuery('#autocraft').click(function(){ window.sessionStorage.craftRecursive = 1; window.location.href = gamecardHref; });
             } else {
-                jQuery('#autocraft').click(function(){ alert("Please execute from page 1."); });
+                delete window.sessionStorage.autoCraftState;
             }
         }
 
@@ -274,6 +351,10 @@ function checkSettings() {
 
     if (window.localStorage.gameIdBlackList) {
         gameIdBlackList = window.localStorage.gameIdBlackList;
+    }
+
+    if (window.localStorage.badgeCraftLimit) {
+        badgeCraftLimit = window.localStorage.badgeCraftLimit;
     }
 }
 
@@ -332,6 +413,10 @@ function resetSettings() {
         delete window.localStorage.gameIdBlackList;
         jQuery('#autocraft_setting_blacklist').val( gameIdBlackList );
 
+        badgeCraftLimit = '';
+        delete window.localStorage.badgeCraftLimit;
+        jQuery('#autocraft_setting_badgelimit').val( badgeCraftLimit );
+
         toggleSettings();
         window.location.reload(true);
     }
@@ -375,6 +460,18 @@ function saveSettings() {
                 problemState = 1;
             }
         }
+
+        if (setting.name === 'autocraft_setting_badgelimit') {
+            // Ensure that only integers are entered
+            if (((! setting.value.match(/^0$/)) && (setting.value.match(/^[0-9]+$/))) || (setting.value === '')) {
+                badgeCraftLimit                     = setting.value;
+                window.localStorage.badgeCraftLimit = setting.value;
+            } else {
+                alert("Invalid input: "+setting.value+", 'Badge Limit requires an integer greater than 0!");
+                problemState = 1;
+            }
+        }
+
     });
 
     if (problemState === 0) {
