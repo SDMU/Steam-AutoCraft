@@ -1,3 +1,4 @@
+Mon, 24 Apr 2017 17:01:22 -0600 - Release 1.6.1: Bug fixes.
 Sat, 25 Mar 2017 23:30:27 -0600 - Release 1.6: Use <a> and <span> instead of buttons. Show version on settings page. Use newlines for proper button spacing. Redirect to original badges page URL to support execution from any page. Detect conflict with with Chrome extension. Improved settings. Addition of badge crafting limit. Dynamic button name.
 Sun, 19 Mar 2017 12:57:25 -0600 - Release 1.5.2: Only load CSS if necessary.
 Sun, 19 Mar 2017 05:23:41 -0600 - Release 1.5.1: Forgot to load economy_market.css on the badges page for the settings formatting.
