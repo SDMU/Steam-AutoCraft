@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Steam-AutoCraft
-// @version      1.6
+// @version      1.6.1
 // @description  AutoCraft Steam Community Badges
 // @author       10101000
 // @include      /^https?:\/\/steamcommunity\.com\/+(id\/+[A-Za-z0-9$-_.+!*'(),]+|profiles\/+[0-9]+)\/+(badges\/?|gamecards\/+[0-9]+\/?).*$/
@@ -69,7 +69,7 @@ jQuery(document).ready(function(){
             delete window.sessionStorage.autoCraftState;
 
             if(window.localStorage.badgeCraftLimit) {
-               if(!window.sessionStorage.craftCount) { window.sessionStorage.craftCount = 0 }
+               if(!window.sessionStorage.craftCount) { window.sessionStorage.craftCount = 0; }
                window.sessionStorage.craftCount = +window.sessionStorage.craftCount + 1;
             }
 
@@ -188,19 +188,19 @@ function addButton() {
          </div>
          <p align="center" class="market_listing_game_name">Steam-AutoCraft Version: `+steamAutoCraftVersion+`</p>
       </div>
-</div>`
+</div>`;
 
     jQuery('body').append('<div id="autocraft_settings_background_div" class="newmodal_background" style="opacity: 0.8; display: none;">');
 
     // Load economy.css
     var economyCSS = '/public/css/skin_1/economy.css';
-    if(!(jQuery("link[href*='"+economyCSS+"']").attr('rel') === 'stylesheet')){
+    if(jQuery("link[href*='"+economyCSS+"']").attr('rel') !== 'stylesheet'){
         jQuery('head').append('<link href="'+economyCSS+'" rel="stylesheet" type="text/css">');
     }
 
     // Load economy.css
     var economyMarketCSS = '/public/css/skin_1/economy_market.css';
-    if(!(jQuery("link[href*='"+economyMarketCSS+"']").attr('rel') === 'stylesheet')){
+    if(jQuery("link[href*='"+economyMarketCSS+"']").attr('rel') !== 'stylesheet'){
         jQuery('head').append('<link href="'+economyMarketCSS+'" rel="stylesheet" type="text/css">');
     }
 
@@ -230,7 +230,7 @@ function addButton() {
             zIndex:   500,
             top:      y,
             left:     x
-        })
+        });
 
         // Transform to overlay
         jQuery('#autocraft_settings').css({
@@ -245,7 +245,7 @@ function addButton() {
             outline:             'none',
             top:                 '',
             left:                ''
-        })
+        });
 
         jQuery('#autocraft_settings').click(function(){ toggleSettings(); });
         jQuery('#autocraft_settings_close').click(function(){ toggleSettings(); });
@@ -286,16 +286,16 @@ function addButton() {
 </a>`);
 
         // Set initial position
-        var position = jQuery('#autocraft').position();
-        var x        = position.left;
-        var y        = position.top;
-        x           -= (jQuery('#autocraft_settings').outerWidth() - jQuery('#autocraft').outerWidth());
+        var autocraft_position = jQuery('#autocraft').position();
+        var autocraft_x        = autocraft_position.left;
+        var autocraft_y        = autocraft_position.top;
+        autocraft_x           -= (jQuery('#autocraft_settings').outerWidth() - jQuery('#autocraft').outerWidth());
         jQuery('#autocraft_settings').css({
             position: 'absolute',
             zIndex:   500,
-            top:      y,
-            left:     x
-        })
+            top:      autocraft_y,
+            left:     autocraft_x
+        });
 
         // Transform to overlay
         jQuery('#autocraft_settings').css({
@@ -310,7 +310,7 @@ function addButton() {
             outline:             'none',
             top:                 '',
             left:                ''
-        })
+        });
 
         jQuery('#autocraft_settings').click(function(){ toggleSettings(); });
         jQuery('#autocraft_settings_close').click(function(){ toggleSettings(); });
