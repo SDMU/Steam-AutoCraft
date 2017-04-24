@@ -23,7 +23,7 @@ var pageRefreshTimeoutmsDef  = 10000;
 var pageRefreshTimeoutms     = pageRefreshTimeoutmsDef;
 var redirect                 = 0;
 var skipCraft                = 0;
-var steamAutoCraftVersion    = '1.6';
+var steamAutoCraftVersion    = '1.6.1';
 
 // Badges
 var badgeLinks         = jQuery('.badge_details_set_favorite');
