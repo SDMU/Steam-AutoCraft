@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         Steam-AutoCraft
-// @version      1.6.1
+// @version      1.6.2
 // @description  AutoCraft Steam Community Badges
 // @author       10101000
 // @include      /^https?:\/\/steamcommunity\.com\/+(id\/+[A-Za-z0-9$-_.+!*'(),]+|profiles\/+[0-9]+)\/+(badges\/?|gamecards\/+[0-9]+\/?).*$/
+// @require      http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js
 // @copyright    2016 10101000
 // @grant        none
 // ==/UserScript==
@@ -23,7 +24,7 @@ var pageRefreshTimeoutmsDef  = 10000;
 var pageRefreshTimeoutms     = pageRefreshTimeoutmsDef;
 var redirect                 = 0;
 var skipCraft                = 0;
-var steamAutoCraftVersion    = '1.6.1';
+var steamAutoCraftVersion    = '1.6.2';
 
 // Badges
 var badgeLinks         = jQuery('.badge_details_set_favorite');
