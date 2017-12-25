@@ -7,7 +7,7 @@ For use with Tampermonkey please read http://tampermonkey.net/faq.php#Q102. For 
 
 Please use the following URL to install inside your browser: https://raw.githubusercontent.com/10101000/Steam-AutoCraft/master/Steam-AutoCraft.user.js
 
-If the aforementioned URL doesn't install the script (Greasemonkey 4.x with Firefox 57+) try this URL: https://cdn.rawgit.com/10101000/Steam-AutoCraft/master/Steam-AutoCraft.user.js
+If the aforementioned URL doesn't install the script (Greasemonkey 4.x with Firefox 57+) try this URL: https://rawgit.com/10101000/Steam-AutoCraft/master/Steam-AutoCraft.user.js
 
 ### Usage
 
